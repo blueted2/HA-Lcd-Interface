@@ -15,26 +15,26 @@ enum UiAlign
 class BoundingBox
 {
 private:
-  int x1, y1, x2, y2;     // The two corner points of the bounding box
   int anchor_x, anchor_y; // The anchor points from which the corner points are calculated
   int width, height;
   UiAlign align;
 
-public:
-  BoundingBox(int anchor_x, int anchor_y, int width, int height, UiAlign align);
-  //: anchor_x(anchor_x), anchor_y(anchor_y), width(width), height(height), align(align);
+  void UpdateCorners(); // Callled whenever any of the defining variables change
 
-  int GetX1();
-  int GetX2();
-  int GetY1();
-  int GetY2();
+public:
+  int x1, y1, x2, y2; // The two corner points of the bounding box
+
+  BoundingBox(int anchor_x, int anchor_y, int width, int height, UiAlign align);
+
+  void SetAnchorPoint(int anchor_x, int anchor_y);
+  void SetSize(int width, int height);
 };
 
 /* Base class, from which all ui elements will inherit */
 class UiBase
 {
 public:
-  void virtual Draw(U8G2 *);
+  void virtual Draw(U8G2 *font);
 };
 
 class UiPage
@@ -58,13 +58,14 @@ private:
 public:
   void Draw();
 
-  UiLabel &SetAnchorPosition(int, int);
-  UiLabel &SetSize(int, int);
-  UiLabel &SetText(const char *);
-  UiLabel &SetFont(uint8_t *);
+  /* Returning references to the current object to allow chaining */
+  UiLabel &SetAnchorPosition(int anchor_x, int anchor_y);
+  UiLabel &SetSize(int width, int height);
+  UiLabel &SetText(const char *text);
+  UiLabel &SetFont(uint8_t *font);
 
-  UiLabel &SetDrawBorder(bool);
-  UiLabel &SetBorderRadius(int);
+  UiLabel &SetDrawBorder(bool draw_border);
+  UiLabel &SetBorderRadius(int border_radius);
 
   BoundingBox &GetBoundingBox();
 };
