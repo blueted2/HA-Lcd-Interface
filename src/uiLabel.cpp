@@ -61,8 +61,6 @@ void UiLabel::UpdateBoundingBox()
   {
     height = u->getMaxCharHeight() + 4;
   }
-
-  Serial.println(width);
   this->label_box.SetSize(width, height);
 }
 
