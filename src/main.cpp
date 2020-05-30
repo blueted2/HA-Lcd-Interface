@@ -1,5 +1,7 @@
 #include <Arduino.h>
+#include <U8g2lib.h>
 #include "ui.h"
+#include "hass.h"
 
 U8G2_ST7920_128X64_F_SW_SPI u8g2(U8G2_R0, /* clock=*/14, /* data=*/13, /* CS=*/15, /* reset=*/16); // Feather HUZZAH ESP8266, E=clock=14, RW=data=13, RS=CS
 

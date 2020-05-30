@@ -45,7 +45,7 @@ class UiPage
 {
 private:
   // Using std::reference_wrapper because a vector can't directly store references
-  std::vector<std::reference_wrapper<UiBase>> uiElements; // Using vector so that the size is dynamic
+  std::vector<std::reference_wrapper<UiBase>> ui_elements; // Using vector so that the size is dynamic
 
 public:
   void DrawAllElements();
