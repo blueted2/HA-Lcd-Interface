@@ -11,16 +11,16 @@ HassConnection::HassConnection(WiFiClient *client, String host, String auth_key,
 
 void HassConnection::GetInitialValuesWithHTML()
 {
-  for (FloatSensor &float_sensor : float_sensors)
+  for (int i = 0; i < float_sensors_num; i++)
   {
-    float value = GetFloatValueWithHTML(float_sensor.entity_id);
-    float_sensor.value = value;
-    Serial.println(float_sensor.entity_id + ": " + String(float_sensor.value));
+    FloatSensor *float_sensor = &float_sensors[i];
+    float_sensor->value = GetFloatValueWithHTML(float_sensor->entity_id);
   }
 
-  for (BoolSensor &bool_sensor : bool_sensors)
+  for (int i = 0; i < bool_sensors_num; i++)
   {
-    bool_sensor.value = GetBoolValueWithHTML(bool_sensor.entity_id);
+    BoolSensor *bool_sensor = &bool_sensors[i];
+    bool_sensor->value = GetBoolValueWithHTML(bool_sensor->entity_id);
   }
 }
 
@@ -65,14 +65,14 @@ String HassConnection::ParseValueFromHTMLPayload(String payload)
 
 FloatSensor &HassConnection::AddFloatSensor(String entity_id)
 {
-  this->float_sensors.push_back(FloatSensor{entity_id, 0});
-  return this->float_sensors.back();
+  this->float_sensors[float_sensors_num] = FloatSensor{entity_id, 0};
+  return this->float_sensors[float_sensors_num++];
 }
 
 BoolSensor &HassConnection::AddBoolSensor(String entity_id)
 {
-  this->bool_sensors.push_back(BoolSensor{entity_id, 0});
-  return this->bool_sensors.back();
+  this->bool_sensors[bool_sensors_num] = BoolSensor{entity_id, 0};
+  return this->bool_sensors[bool_sensors_num++];
 }
 
 void HassConnection::websocket_setup()
@@ -166,23 +166,25 @@ void HassConnection::handle_socket_payload(String payload)
     String state = doc["event"]["data"]["new_state"]["state"];
 
     socket_has_had_update = false;
-    for (FloatSensor &float_sensor : float_sensors)
+    for (int i = 0; i < float_sensors_num; i++)
     {
-      if (float_sensor.entity_id == entity_id)
+      FloatSensor *float_sensor = &float_sensors[i];
+      if (float_sensor->entity_id == entity_id)
       {
-        float_sensor.value = state.toFloat();
+        float_sensor->value = state.toFloat();
         socket_has_had_update = true;
         Serial.println(String(entity_id) + ": " + String(state.toFloat()));
       }
     }
 
-    for (BoolSensor &bool_sensor : bool_sensors)
+    for (int i = 0; i < bool_sensors_num; i++)
     {
-      if (bool_sensor.entity_id == entity_id)
+      BoolSensor *bool_sensor = &bool_sensors[i];
+      if (bool_sensor->entity_id == entity_id)
       {
-        bool_sensor.value = state == "on";
+        bool_sensor->value = state.toFloat();
         socket_has_had_update = true;
-        Serial.println(String(entity_id) + ": " + String(state));
+        Serial.println(String(entity_id) + ": " + String(state.toFloat()));
       }
     }
   }

@@ -34,10 +34,13 @@ public:
   bool socket_has_had_update = true;
   HassConnection(WiFiClient *client, String host, String auth_key, String http_path, String socket_path);
 
-  std::vector<FloatSensor> float_sensors;
-  std::vector<BoolSensor> bool_sensors;
+  FloatSensor float_sensors[20];
+  BoolSensor bool_sensors[20];
+  int float_sensors_num = 0;
+  int bool_sensors_num = 0;
 
-  FloatSensor &AddFloatSensor(String entity_id);
+  FloatSensor &
+  AddFloatSensor(String entity_id);
   BoolSensor &AddBoolSensor(String entity_id);
 
   void GetInitialValuesWithHTML();
