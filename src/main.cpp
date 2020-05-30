@@ -15,7 +15,10 @@ String auth = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIzOTQwODgzMTFmMmI0
 WiFiClient client;
 ESP8266WiFiMulti WiFiMulti;
 
-HassConnection hass(&client, "molagnies.hd.free.fr", auth, "/api/states/", "/api/websocket/");
+HassConnection hass(&client, "molagnies.hd.free.fr", auth, "/api/states/", "/api/websocket");
+
+FloatSensor &grid_usage = hass.AddFloatSensor("sensor.grid_usage");
+BoolSensor &immersion_enabled = hass.AddBoolSensor("switch.ih_enable");
 
 void setup()
 {
@@ -33,10 +36,9 @@ void setup()
     delay(500);
   };
 
-  FloatSensor &grid_usage = hass.AddFloatSensor("sensor.grid_usage");
-  BoolSensor &immersion_enabled = hass.AddBoolSensor("switch.ih_enable");
   hass.GetInitialValuesWithHTML();
-  Serial.println(immersion_enabled.value);
+
+  hass.websocket_setup();
 }
 
 void loop()
@@ -45,7 +47,9 @@ void loop()
   do
   {
     ui_first_page.DrawAllElements();
+    hass.websocket_loop();
   } while (u8g2.nextPage());
 
-  lb_first_label.SetSize(millis() / 100 % 128, millis() / 200 % 64).SetAnchorPosition(0, millis() / 500 % 64);
+  lb_first_label.SetText(String(grid_usage.value).c_str());
+  hass.websocket_loop();
 }

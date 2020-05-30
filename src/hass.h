@@ -1,7 +1,9 @@
 #include <Arduino.h>
 #include <vector>
 #include <ESP8266HTTPClient.h>
+#define ARDUINOJSON_DECODE_UNICODE 1
 #include <ArduinoJson.h>
+#include <WebSocketsClient.h>
 
 struct FloatSensor
 {
@@ -20,6 +22,7 @@ class HassConnection
 private:
   HTTPClient http;
   WiFiClient *client;
+  WebSocketsClient webSocket;
   String host;
   String auth_key;
   String http_path;
@@ -27,6 +30,8 @@ private:
   StaticJsonDocument<8192> doc;
 
 public:
+  bool socket_connected = false;
+  bool socket_has_had_update = false;
   HassConnection(WiFiClient *client, String host, String auth_key, String http_path, String socket_path);
 
   std::vector<FloatSensor> float_sensors;
@@ -41,7 +46,9 @@ public:
   bool GetBoolValueWithHTML(String entity_id);
   String ParseValueFromHTMLPayload(String payload);
 
-  void SubscribeAllDevices();
+  void websocket_setup();
+  void websocket_loop();
 
-  void ConnectToHass();
+  void handle_websocket_event(WStype_t type, uint8_t *payload, size_t length);
+  void handle_socket_payload(String payload);
 };
