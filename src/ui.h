@@ -57,21 +57,17 @@ class UiLabel : public UiBase
 private:
   BoundingBox label_box = BoundingBox(0, 0, 0, 0, center);
   const char *text;
+
+public:
   uint8_t *font;
   bool draw_border;
   int border_radius;
-
-public:
   UiLabel(int anchor_x, int anchor_y, int width, int height);
 
   /* Returning references to the current object to allow chaining */
   UiLabel &SetAnchorPosition(int anchor_x, int anchor_y);
   UiLabel &SetSize(int width, int height);
   UiLabel &SetText(const char *text);
-  UiLabel &SetFont(uint8_t *font);
-
-  UiLabel &SetDrawBorder(bool draw_border);
-  UiLabel &SetBorderRadius(int border_radius);
 
   BoundingBox &GetBoundingBox();
 
