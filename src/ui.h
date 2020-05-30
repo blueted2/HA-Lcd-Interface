@@ -34,16 +34,18 @@ public:
 class UiBase
 {
 public:
-  void virtual Draw(U8G2 *font);
+  void virtual Draw(U8G2 &);
 };
 
 class UiPage
 {
 private:
-  std::vector<UiBase> uiElements; // Using vector so that the size is dynamic
+  // Using std::reference_wrapper because a vector can't directly store references
+  std::vector<std::reference_wrapper<UiBase>> uiElements; // Using vector so that the size is dynamic
 
 public:
-  void DrawAllElements();
+  void DrawAllElements(U8G2 &);
+  UiPage &AddElement(UiBase &);
 };
 
 class UiLabel : public UiBase
@@ -56,8 +58,6 @@ private:
   int border_radius;
 
 public:
-  void Draw();
-
   /* Returning references to the current object to allow chaining */
   UiLabel &SetAnchorPosition(int anchor_x, int anchor_y);
   UiLabel &SetSize(int width, int height);
