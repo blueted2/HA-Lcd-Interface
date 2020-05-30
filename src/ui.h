@@ -55,7 +55,6 @@ public:
 class UiLabel : public UiBase
 {
 private:
-  BoundingBox label_box = BoundingBox(0, 0, 0, 0, center);
   String text = "Default";
   bool automatic_border_height = true;
   bool automatic_border_width = true;
@@ -63,6 +62,7 @@ private:
   UiAlign text_align = center;
 
 public:
+  BoundingBox label_box = BoundingBox(0, 0, 0, 0, center);
   const uint8_t *font = u8g2_font_5x8_tf;
   bool draw_border = true;
   int border_radius = 2;

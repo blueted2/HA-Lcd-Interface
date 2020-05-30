@@ -13,7 +13,9 @@ void HassConnection::GetInitialValuesWithHTML()
 {
   for (FloatSensor &float_sensor : float_sensors)
   {
-    float_sensor.value = GetFloatValueWithHTML(float_sensor.entity_id);
+    float value = GetFloatValueWithHTML(float_sensor.entity_id);
+    float_sensor.value = value;
+    Serial.println(float_sensor.entity_id + ": " + String(float_sensor.value));
   }
 
   for (BoolSensor &bool_sensor : bool_sensors)
@@ -171,7 +173,6 @@ void HassConnection::handle_socket_payload(String payload)
         float_sensor.value = state.toFloat();
         socket_has_had_update = true;
         Serial.println(String(entity_id) + ": " + String(state.toFloat()));
-        break;
       }
     }
 
@@ -182,7 +183,6 @@ void HassConnection::handle_socket_payload(String payload)
         bool_sensor.value = state == "on";
         socket_has_had_update = true;
         Serial.println(String(entity_id) + ": " + String(state));
-        break;
       }
     }
   }

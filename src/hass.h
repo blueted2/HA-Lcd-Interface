@@ -31,7 +31,7 @@ private:
 
 public:
   bool socket_connected = false;
-  bool socket_has_had_update = false;
+  bool socket_has_had_update = true;
   HassConnection(WiFiClient *client, String host, String auth_key, String http_path, String socket_path);
 
   std::vector<FloatSensor> float_sensors;

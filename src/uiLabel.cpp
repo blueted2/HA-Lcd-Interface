@@ -74,7 +74,8 @@ void UiLabel::Draw()
   int y1 = this->label_box.y1;
   int width = this->label_box.GetWidth();
   int height = this->label_box.GetHeight();
-  u->drawFrame(x1, y1, width, height);
+  if (this->draw_border)
+    u->drawFrame(x1, y1, width, height);
 
   int draw_y = y1 + str_height * 0.5 + height * 0.5;
   int draw_x = 0;
