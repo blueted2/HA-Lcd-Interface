@@ -11,10 +11,22 @@ void BoundingBox::UpdateCorners()
   switch (align)
   {
   case left:
+    this->x1 = this->anchor_x;
+    this->y1 = this->anchor_y;
+    this->x2 = this->anchor_x + this->width;
+    this->y2 = this->anchor_y + this->height;
     break;
   case center:
+    this->x1 = this->anchor_x - this->width * 0.5;
+    this->y1 = this->anchor_y;
+    this->x2 = this->anchor_x + this->width * 0.5;
+    this->y2 = this->anchor_y + this->height;
     break;
   case right:
+    this->x1 = this->anchor_x - this->width;
+    this->y1 = this->anchor_y;
+    this->x2 = this->anchor_x;
+    this->y2 = this->anchor_y + this->height;
     break;
   }
 }
