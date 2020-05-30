@@ -26,8 +26,8 @@ public:
 
   BoundingBox(int anchor_x, int anchor_y, int width, int height, UiAlign align);
 
-  void SetAnchorPoint(int anchor_x, int anchor_y);
-  void SetSize(int width, int height);
+  BoundingBox &SetAnchorPoint(int anchor_x, int anchor_y);
+  BoundingBox &SetSize(int width, int height);
 };
 
 /* Base class, from which all ui elements will inherit */

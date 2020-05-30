@@ -30,3 +30,18 @@ void BoundingBox::UpdateCorners()
     break;
   }
 }
+
+BoundingBox &BoundingBox::SetAnchorPoint(int anchor_x, int anchor_y)
+{
+  this->anchor_x = anchor_x;
+  this->anchor_y = anchor_y;
+  this->UpdateCorners();
+  return *this;
+}
+BoundingBox &BoundingBox::SetSize(int width, int height)
+{
+  this->width = width;
+  this->height = height;
+  this->UpdateCorners();
+  return *this;
+}
