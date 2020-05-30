@@ -38,7 +38,7 @@ public:
 class UiBase
 {
 public:
-  virtual void Draw(U8G2 &);
+  virtual void Draw();
 };
 
 class UiPage
@@ -48,7 +48,7 @@ private:
   std::vector<std::reference_wrapper<UiBase>> uiElements; // Using vector so that the size is dynamic
 
 public:
-  void DrawAllElements(U8G2 &);
+  void DrawAllElements();
   UiPage &AddElement(UiBase &);
 };
 
@@ -56,22 +56,28 @@ class UiLabel : public UiBase
 {
 private:
   BoundingBox label_box = BoundingBox(0, 0, 0, 0, center);
-  const char *text;
+  String text = "Default";
+  bool automatic_border_height = true;
+  bool automatic_border_width = true;
+  U8G2 *u; // Pointer instead of reference because you can't have a reference without initilising the object
 
 public:
   uint8_t *font;
-  bool draw_border;
-  int border_radius;
-  UiLabel(int anchor_x, int anchor_y, int width, int height);
+  bool draw_border = true;
+  int border_radius = 2;
+  UiLabel(U8G2 *u, int anchor_x, int anchor_y, int width, int height);
 
   /* Returning references to the current object to allow chaining */
   UiLabel &SetAnchorPosition(int anchor_x, int anchor_y);
   UiLabel &SetSize(int width, int height);
-  UiLabel &SetText(const char *text);
+  UiLabel &SetText(String text);
 
-  BoundingBox &GetBoundingBox();
+  UiLabel &SetAutomaticBorderWidth(bool);
+  UiLabel &SetAutomaticBorderHeight(bool);
 
-  virtual void Draw(U8G2 &u);
+  void UpdateBoundingBox();
+
+  virtual void Draw();
 };
 
 #endif

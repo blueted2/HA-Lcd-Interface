@@ -6,10 +6,10 @@ UiPage &UiPage::AddElement(UiBase &element)
   return *this;
 }
 
-void UiPage::DrawAllElements(U8G2 &u)
+void UiPage::DrawAllElements()
 {
   for (UiBase &uiElement : uiElements)
   {
-    uiElement.Draw(u);
+    uiElement.Draw();
   }
 }
