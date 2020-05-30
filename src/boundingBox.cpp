@@ -1,6 +1,6 @@
 #include "ui.h"
 
-BoundingBox::BoundingBox(int _anchor_x, int _anchor_y, int _width, int _height, UiAlign _align)
+BoundingBox::BoundingBox(int _anchor_x = 0, int _anchor_y = 0, int _width = 0, int _height = 0, UiAlign _align = center)
     : anchor_x(_anchor_x), anchor_y(_anchor_y), width(_width), height(_height), align(_align)
 {
   UpdateCorners();
@@ -45,3 +45,11 @@ BoundingBox &BoundingBox::SetSize(int width, int height)
   this->UpdateCorners();
   return *this;
 }
+BoundingBox &BoundingBox::SetAlignment(UiAlign align)
+{
+  this->align = align;
+  this->UpdateCorners();
+  return *this;
+}
+int BoundingBox::GetWidth() { return this->width; }
+int BoundingBox::GetHeight() { return this->height; }

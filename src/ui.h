@@ -28,13 +28,17 @@ public:
 
   BoundingBox &SetAnchorPoint(int anchor_x, int anchor_y);
   BoundingBox &SetSize(int width, int height);
+  BoundingBox &SetAlignment(UiAlign align);
+
+  int GetWidth();
+  int GetHeight();
 };
 
 /* Base class, from which all ui elements will inherit */
 class UiBase
 {
 public:
-  void virtual Draw(U8G2 &);
+  virtual void Draw(U8G2 &);
 };
 
 class UiPage
@@ -51,13 +55,15 @@ public:
 class UiLabel : public UiBase
 {
 private:
-  BoundingBox label_box;
+  BoundingBox label_box = BoundingBox(0, 0, 0, 0, center);
   const char *text;
   uint8_t *font;
   bool draw_border;
   int border_radius;
 
 public:
+  UiLabel(int anchor_x, int anchor_y, int width, int height);
+
   /* Returning references to the current object to allow chaining */
   UiLabel &SetAnchorPosition(int anchor_x, int anchor_y);
   UiLabel &SetSize(int width, int height);
@@ -68,6 +74,8 @@ public:
   UiLabel &SetBorderRadius(int border_radius);
 
   BoundingBox &GetBoundingBox();
+
+  virtual void Draw(U8G2 &u);
 };
 
 #endif
