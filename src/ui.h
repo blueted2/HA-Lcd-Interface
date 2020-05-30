@@ -60,9 +60,10 @@ private:
   bool automatic_border_height = true;
   bool automatic_border_width = true;
   U8G2 *u; // Pointer instead of reference because you can't have a reference without initilising the object
+  UiAlign text_align = center;
 
 public:
-  uint8_t *font;
+  const uint8_t *font = u8g2_font_5x8_tf;
   bool draw_border = true;
   int border_radius = 2;
   UiLabel(U8G2 *u, int anchor_x, int anchor_y, int width, int height);
@@ -71,6 +72,7 @@ public:
   UiLabel &SetAnchorPosition(int anchor_x, int anchor_y);
   UiLabel &SetSize(int width, int height);
   UiLabel &SetText(String text);
+  UiLabel &SetFont(const uint8_t *);
 
   UiLabel &SetAutomaticBorderWidth(bool);
   UiLabel &SetAutomaticBorderHeight(bool);

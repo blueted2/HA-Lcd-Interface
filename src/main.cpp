@@ -8,6 +8,7 @@ UiLabel lb_first_label(&u8g2, 0, 0, 100, 50);
 
 void setup()
 {
+  lb_first_label.SetAutomaticBorderHeight(true);
   Serial.begin(9600);
   u8g2.begin();
 
@@ -21,4 +22,6 @@ void loop()
   {
     ui_first_page.DrawAllElements();
   } while (u8g2.nextPage());
+
+  lb_first_label.SetSize(millis() / 100 % 128, millis() / 200 % 64).SetAnchorPosition(0, millis() / 500 % 64);
 }
