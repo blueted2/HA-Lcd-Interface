@@ -30,6 +30,7 @@ private:
   StaticJsonDocument<8192> doc;
 
 public:
+  bool has_received_first_values = false;
   bool socket_connected = false;
   bool socket_has_had_update = true;
   HassConnection(WiFiClient *client, String host, String auth_key, String http_path, String socket_path);

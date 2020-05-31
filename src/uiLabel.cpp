@@ -1,8 +1,21 @@
 #include "ui.h"
 
-UiLabel::UiLabel(U8G2 *u, int anchor_x, int anchor_y, int width, int height)
+UiLabel::UiLabel(U8G2 *u, int anchor_x, int anchor_y, int width = -1, int height = -1)
 {
   this->u = u;
+  if (width == -1)
+  {
+    this->SetAutomaticBorderWidth(true);
+    width = 10;
+  }
+
+  if (height == -1)
+  {
+    this->SetAutomaticBorderHeight(true);
+    height = 10;
+  }
+
+  this->UpdateBoundingBox();
   this->label_box.SetAnchorPoint(anchor_x, anchor_y).SetSize(width, height).SetAlignment(left);
 }
 
@@ -93,5 +106,5 @@ void UiLabel::Draw()
     break;
   }
 
-  u->drawStr(draw_x, draw_y, this->text.c_str());
+  u->drawUTF8(draw_x, draw_y, this->text.c_str());
 }

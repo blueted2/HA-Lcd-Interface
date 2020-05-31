@@ -56,15 +56,15 @@ class UiLabel : public UiBase
 {
 private:
   String text = "Default";
-  bool automatic_border_height = true;
-  bool automatic_border_width = true;
+  bool automatic_border_height = false;
+  bool automatic_border_width = false;
   U8G2 *u; // Pointer instead of reference because you can't have a reference without initilising the object
   UiAlign text_align = center;
 
 public:
-  BoundingBox label_box = BoundingBox(0, 0, 0, 0, center);
-  const uint8_t *font = u8g2_font_5x8_tf;
-  bool draw_border = true;
+  BoundingBox label_box = BoundingBox(0, 0, 0, 0, left);
+  const uint8_t *font = u8g2_font_6x10_tf;
+  bool draw_border = false;
   int border_radius = 2;
   UiLabel(U8G2 *u, int anchor_x, int anchor_y, int width, int height);
 
@@ -81,5 +81,12 @@ public:
 
   virtual void Draw();
 };
+
+class UiProgressBar : UiBase
+{
+
+public:
+    UiLabel bar_label;
+}
 
 #endif

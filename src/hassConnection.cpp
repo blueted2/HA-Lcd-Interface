@@ -22,6 +22,8 @@ void HassConnection::GetInitialValuesWithHTML()
     BoolSensor *bool_sensor = &bool_sensors[i];
     bool_sensor->value = GetBoolValueWithHTML(bool_sensor->entity_id);
   }
+
+  this->has_received_first_values = true;
 }
 
 String HassConnection::GetHTMLPayload(String entity_id)
