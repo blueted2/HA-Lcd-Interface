@@ -55,7 +55,7 @@ public:
 class UiLabel : public UiBase
 {
 private:
-  String text = "Default";
+  String text = "Default asgdasdgsad";
   bool automatic_border_height = false;
   bool automatic_border_width = false;
   U8G2 *u; // Pointer instead of reference because you can't have a reference without initilising the object
@@ -66,11 +66,12 @@ public:
   const uint8_t *font = u8g2_font_6x10_tf;
   bool draw_border = false;
   int border_radius = 2;
-  UiLabel(U8G2 *u, int anchor_x, int anchor_y, int width, int height);
+  UiLabel(U8G2 *u, int anchor_x, int anchor_y, int width, int height, UiAlign center);
 
   /* Returning references to the current object to allow chaining */
   UiLabel &SetAnchorPosition(int anchor_x, int anchor_y);
   UiLabel &SetSize(int width, int height);
+  UiLabel &SetAlignement(UiAlign align);
   UiLabel &SetText(String text);
   UiLabel &SetFont(const uint8_t *);
 
@@ -82,11 +83,24 @@ public:
   virtual void Draw();
 };
 
-class UiProgressBar : UiBase
+class UiProgressBar : public UiBase
 {
+private:
+  U8G2 *u;
+  float max_value = 1;
+  float value = 0;
 
 public:
-    UiLabel bar_label;
-}
+  UiProgressBar(U8G2 *u, int anchor_x, int anchor_y, int width, int height, UiAlign align);
+  BoundingBox bounding_box = BoundingBox(0, 0, 0, 0, left);
+
+  UiProgressBar &SetText(String text);
+  UiProgressBar &SetValue(float value);
+  UiProgressBar &SetMaxValue(float max_value);
+
+  void UpdateBoundingBox();
+
+  virtual void Draw();
+};
 
 #endif

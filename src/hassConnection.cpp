@@ -48,7 +48,9 @@ float HassConnection::GetFloatValueWithHTML(String entity_id)
 
 bool HassConnection::GetBoolValueWithHTML(String entity_id)
 {
-  return ParseValueFromHTMLPayload(GetHTMLPayload(entity_id)) == "on";
+  String value = ParseValueFromHTMLPayload(GetHTMLPayload(entity_id));
+  Serial.println(value);
+  return value == "on";
 }
 
 String HassConnection::ParseValueFromHTMLPayload(String payload)
@@ -184,9 +186,9 @@ void HassConnection::handle_socket_payload(String payload)
       BoolSensor *bool_sensor = &bool_sensors[i];
       if (bool_sensor->entity_id == entity_id)
       {
-        bool_sensor->value = state.toFloat();
+        bool_sensor->value = state == "on";
         socket_has_had_update = true;
-        Serial.println(String(entity_id) + ": " + String(state.toFloat()));
+        Serial.println(String(entity_id) + ": " + String(state == "on"));
       }
     }
   }

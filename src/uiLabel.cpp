@@ -1,6 +1,6 @@
 #include "ui.h"
 
-UiLabel::UiLabel(U8G2 *u, int anchor_x, int anchor_y, int width = -1, int height = -1)
+UiLabel::UiLabel(U8G2 *u, int anchor_x, int anchor_y, int width = -1, int height = -1, UiAlign align = left)
 {
   this->u = u;
   if (width == -1)
@@ -16,7 +16,7 @@ UiLabel::UiLabel(U8G2 *u, int anchor_x, int anchor_y, int width = -1, int height
   }
 
   this->UpdateBoundingBox();
-  this->label_box.SetAnchorPoint(anchor_x, anchor_y).SetSize(width, height).SetAlignment(left);
+  this->label_box.SetAnchorPoint(anchor_x, anchor_y).SetSize(width, height).SetAlignment(align);
 }
 
 UiLabel &UiLabel::SetAnchorPosition(int anchor_x, int anchor_y)
@@ -28,6 +28,12 @@ UiLabel &UiLabel::SetAnchorPosition(int anchor_x, int anchor_y)
 UiLabel &UiLabel::SetSize(int width, int height)
 {
   this->label_box.SetSize(width, height);
+  this->UpdateBoundingBox();
+  return *this;
+}
+UiLabel &UiLabel::SetAlignement(UiAlign align)
+{
+  this->label_box.SetAlignment(align);
   this->UpdateBoundingBox();
   return *this;
 }
@@ -79,6 +85,8 @@ void UiLabel::UpdateBoundingBox()
 
 void UiLabel::Draw()
 {
+  u->setDrawColor(2);
+  u->setBitmapMode(true /* transparent*/);
   u->setFont(this->font);
   int str_width = u->getStrWidth(this->text.c_str());
   int str_height = u->getMaxCharHeight();
@@ -90,7 +98,7 @@ void UiLabel::Draw()
   if (this->draw_border)
     u->drawFrame(x1, y1, width, height);
 
-  int draw_y = y1 + str_height * 0.5 + height * 0.5;
+  int draw_y = y1 + str_height * 0.5 + height * 0.5 - 1;
   int draw_x = 0;
 
   switch (text_align)
