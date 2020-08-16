@@ -8,7 +8,7 @@
 #include "sprites.h"
 
 /** HassIO stuff **/
-String auth = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIzOTQwODgzMTFmMmI0OTI0ODA5ZGMyMDFiNzJhMDA0OCIsImlhdCI6MTU4NDg4ODE1MiwiZXhwIjoxOTAwMjQ4MTUyfQ.32CStLFyivAzNopWsdmUlGC_mg7dvQfLA6iSSN0y5D4";
+String auth = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIwMWM3YThhYTM3MWI0NzQ2ODkzNTk1ZmYwM2I1NDA0MyIsImlhdCI6MTU5MzY3NTEzNiwiZXhwIjoxOTA5MDM1MTM2fQ.qVtn6Vl0VyaefwNJyAWKZ5hi3XYwPuFjJzi5W503Xvs";
 WiFiClient client;
 ESP8266WiFiMulti WiFiMulti;
 HassConnection hass(&client, "molagnies.hd.free.fr", auth, "/api/states/", "/api/websocket");
@@ -61,14 +61,12 @@ void setup()
   main_page.AddElement(dhw_temp_bottom_label);
   main_page.AddElement(solar_power_label);
   main_page.AddElement(power_usage_label);
-  // main_page.AddElement(charge_power_label);
   main_page.AddElement(grid_usage_label);
   main_page.AddElement(battery_charge_label);
   main_page.AddElement(battery_charge_bar);
 
   solar_power_label.label_box.SetAlignment(right);
   power_usage_label.label_box.SetAlignment(right);
-  // charge_power_label.label_box.SetAlignment(right);
 
   battery_charge_bar.SetMaxValue(99);
 
@@ -79,14 +77,9 @@ void setup()
   values_status_label.label_box.SetAlignment(center);
   values_status_label.SetText("");
 
-  // dhw_temp_middle_label.SetAutomaticBorderHeight(false)
-  //     .SetAutomaticBorderWidth(true)
-  //     .SetSize(0, dhw_temp_bottom_label.label_box.y2 - dhw_temp_top_label.label_box.y1)
-  //     .SetAnchorPosition(dhw_temp_top_label.label_box.x1, dhw_temp_top_label.label_box.y1)
-  //     .draw_border = true;
-
-  WiFiMulti.addAP("Molagnies WiFi", "76M0lagnies");
   WiFiMulti.addAP("Molagnies_Free", "molagnies");
+  WiFiMulti.addAP("Molagnies WiFi", "76M0lagnies");
+
   /*
   while (WiFiMulti.run() != WL_CONNECTED)
   {
@@ -139,13 +132,20 @@ void loop()
           u8g2.drawXBMP(2, 35, phase2_width, phase2_height, phase2);
         }
       }
+
+      if (hass.has_received_pong)
+      {
+        u8g2.setDrawColor(1);
+        u8g2.drawDisc(120, 41, 3); // Connection status
+        hass.has_received_pong = false;
+        Serial.println("Drawing circle");
+      }
     } while (u8g2.nextPage());
   }
 }
 
 void update_connection_page()
 {
-  Serial.println("Updating connection page");
   if (wifi_connect())
   {
     wifi_status_label.SetText("WiFi Connected").draw_border = true;
@@ -170,7 +170,7 @@ void update_main_page()
   grid_usage_label.SetText(String("Grid: ") + String(grid_usage.value, 0) + " W");
 
   battery_charge_bar.SetValue(battery_charge.value);
-  battery_charge_label.SetText(String(charge_power.value, 0) + " W | " + String(battery_charge.value, 0) + " %");
+  battery_charge_label.SetText(String(charge_power.value, 0) + " W  " + String(battery_charge.value, 0) + " %");
 }
 
 bool wifi_connect()

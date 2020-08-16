@@ -96,7 +96,7 @@ void HassConnection::websocket_setup()
   ping server every 15000 ms
   expect pong from server within 3000 ms
   consider connection disconnected if pong is not received 2 times */
-  webSocket.enableHeartbeat(15000, 3000, 2);
+  webSocket.enableHeartbeat(20000, 10000, 10);
 }
 
 void HassConnection::handle_websocket_event(WStype_t type, uint8_t *payload, size_t length)
@@ -106,6 +106,7 @@ void HassConnection::handle_websocket_event(WStype_t type, uint8_t *payload, siz
   case WStype_DISCONNECTED:
     Serial.printf("[WSc] Disconnected!\n");
     socket_connected = false;
+    this->websocket_setup();
     break;
   case WStype_CONNECTED:
   {
@@ -119,7 +120,6 @@ void HassConnection::handle_websocket_event(WStype_t type, uint8_t *payload, siz
   case WStype_TEXT:
     // Serial.println((char*)payload);
     handle_socket_payload(String((char *)payload));
-
     break;
 
   case WStype_BIN:
@@ -136,6 +136,7 @@ void HassConnection::handle_websocket_event(WStype_t type, uint8_t *payload, siz
   case WStype_PONG:
     // answer to a ping we send
     Serial.printf("[WSc] get pong\n");
+    has_received_pong = true;
     break;
   }
 };
@@ -156,12 +157,15 @@ void HassConnection::handle_socket_payload(String payload)
 
     Serial.println("Authenfying...");
 
-    webSocket.sendTXT("{\"type\":\"auth\",\"access_token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIzOTQwODgzMTFmMmI0OTI0ODA5ZGMyMDFiNzJhMDA0OCIsImlhdCI6MTU4NDg4ODE1MiwiZXhwIjoxOTAwMjQ4MTUyfQ.32CStLFyivAzNopWsdmUlGC_mg7dvQfLA6iSSN0y5D4\"}");
+    webSocket.sendTXT("{\"type\":\"auth\",\"access_token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIwMWM3YThhYTM3MWI0NzQ2ODkzNTk1ZmYwM2I1NDA0MyIsImlhdCI6MTU5MzY3NTEzNiwiZXhwIjoxOTA5MDM1MTM2fQ.qVtn6Vl0VyaefwNJyAWKZ5hi3XYwPuFjJzi5W503Xvs\"}");
   }
   else if (strcmp(doc["type"], "auth_ok") == 0)
   { // If authentification successful
     Serial.println("Authenfication successful");
     webSocket.sendTXT("{\"id\": 2,\"type\": \"subscribe_events\",\"event_type\": \"state_changed\"}");
+
+    // Request missed values by html
+    this->GetInitialValuesWithHTML();
   }
   else if (strcmp(doc["type"], "event") == 0)
   {
