@@ -17,7 +17,7 @@ class BoundingBox
 private:
   int anchor_x, anchor_y; // The anchor points from which the corner points are calculated
   int width, height;
-  UiAlign align;
+  UiAlign align; // Where box is located relative to its anchor points
 
   void UpdateCorners(); // Callled whenever any of the defining variables change
 
@@ -46,7 +46,7 @@ class UiPage
 private:
   // Using std::reference_wrapper because a vector can't directly store references
   std::vector<std::reference_wrapper<UiBase>> ui_elements; // Using vector so that the size is dynamic
-
+  
 public:
   void DrawAllElements();
   UiPage &AddElement(UiBase &);
@@ -102,5 +102,7 @@ public:
 
   virtual void Draw();
 };
+
+
 
 #endif
